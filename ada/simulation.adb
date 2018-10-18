@@ -22,18 +22,18 @@ procedure Simulation is
      Ada.Numerics.Discrete_Random(Assembly_Type);
    type My_Str is new String(1 ..256);
 
-      task type Producer is
-            entry Start(Product: in Product_Type; Production_Time: in Integer);
+   task type Producer is
+      entry Start(Product: in Product_Type; Production_Time: in Integer);
    end Producer;
 
-      task type Consumer is
-            entry Start(Consumer_Number: in Consumer_Type;
+   task type Consumer is
+      entry Start(Consumer_Number: in Consumer_Type;
 		    Consumption_Time: in Integer);
    end Consumer;
 
-      task type Buffer is
-            entry Take(Product: in Product_Type; Number: in Integer);
-            entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
+   task type Buffer is
+      entry Take(Product: in Product_Type; Number: in Integer; IsTaken: out Boolean);
+      entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
    end Buffer;
 
    P: array ( 1 .. Number_Of_Products ) of Producer;
@@ -47,9 +47,11 @@ procedure Simulation is
       Product_Type_Number: Integer;
       Product_Number: Integer;
       Production: Integer;
+      IsTaken: Boolean;
    begin
       accept Start(Product: in Product_Type; Production_Time: in Integer) do
-	 Random_Production.Reset(G);		 Product_Number := 1;
+	 Random_Production.Reset(G);		 
+	 Product_Number := 1;
 	 Product_Type_Number := Product;
 	 Production := Production_Time;
       end Start;
@@ -58,8 +60,14 @@ procedure Simulation is
 	 delay Duration(Random_Production.Random(G)); 
 	 Put_Line("Hey I made " & Product_Name(Product_Type_Number)
 		    & " i have "  & Integer'Image(Product_Number) & " of them");
-	 B.Take(Product_Type_Number, Product_Number);
-	 Product_Number := Product_Number + 1;
+	 
+	 loop
+	    B.Take(Product_Type_Number, Product_Number, IsTaken);
+	    if IsTaken then
+               exit;
+	    end if;
+	 end loop;
+
       end loop;
    end Producer;
 
@@ -83,12 +91,11 @@ procedure Simulation is
       end Start;
       Put_Line("Wow,  " & Consumer_Name(Consumer_Nb) & " came to McDonald hungry as always!");
       loop
-	 
 	 delay Duration(Random_Consumption.Random(G)); 
 	 Assembly_Type := Random_Assembly.Random(G2);
 	 Put_line("Hi We would like to order " & Assembly_Name(Assembly_Type));
 	 select
-	    delay 3.0;
+	    delay 2.0;
 	    Put_Line("That's to long for me, sorry i am out, i will go elsewhere");
 	 then abort		 
 	    loop
@@ -141,29 +148,28 @@ procedure Simulation is
 	 
 	 Free := Storage_Capacity - In_Storage;
 	 MP := True;
+	 
 	 for W in Product_Type loop
 	    if Storage(W) < Max_Assembly_Content(W) then
 	       MP := False;
 	    end if;
 	 end loop;
 	 if MP then
-	    return True;		--  storage has products for arbitrary
-	       				--  assembly
+	    return True;		
+	       			
 	 end if;
 	 if Integer'Max(0, Max_Assembly_Content(Product) - Storage(Product)) > 0 then
-	    -- exactly this product lacks
+	    
 	    return True;
 	 end if;
-	 Lacking_room := 1;			--  insert current product
+	 Lacking_room := 1;			
 	 for W in Product_Type loop
 	    Lacking(W) := Integer'Max(0, Max_Assembly_Content(W) - Storage(W));
 	    Lacking_room := Lacking_room + Lacking(W);
 	 end loop;
 	 if Free >= Lacking_room then
-	    -- there is enough room in storage for arbitrary assembly
 	    return True;
 	 else
-	    -- no room for this product
 	    return False;
 	 end if;
       end Can_Accept;
@@ -190,6 +196,7 @@ procedure Simulation is
       Put_Line("McDonald's is open! Welcome everybody");
       Setup_Variables;
       loop
+         select
 	    accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do
 	        if Can_Deliver(Assembly) then
 	          Put_Line("Here's your's " & Assembly_Name(Assembly) & " in amount of " &
@@ -201,19 +208,24 @@ procedure Simulation is
 	          Number := Assembly_Number(Assembly);
 	          Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
 	       else
-	          Put_Line("One moment Sir, you need to wait a bit longer");
+	          Put_Line("One moment, you need to wait a bit longer");
 	       end if;
 	    end Deliver;
-            accept Take(Product: in Product_Type; Number: in Integer) do
+	 or   
+            accept Take(Product: in Product_Type; Number: in Integer; IsTaken: out Boolean) do
 	      if Can_Accept(Product) then
 	         Put_Line("Thank you for " & Integer'Image(Number) & "  " & Product_Name(Product));
 	         Storage(Product) := Storage(Product) + 1;
 	         In_Storage := In_Storage + 1;
+		 IsTaken := True;
+
   	      else
 	         Put_Line("Sorry I can't take " & Integer'Image(Number) & " " & Product_Name(Product));
+		 IsTaken := False;
 	      end if;
 	    end Take;
-	 
+         end select;
+
 	 Storage_Contents;
       end loop;
    end Buffer;
