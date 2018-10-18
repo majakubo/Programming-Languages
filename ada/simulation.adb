@@ -86,14 +86,19 @@ procedure Simulation is
 	 
 	 delay Duration(Random_Consumption.Random(G)); 
 	 Assembly_Type := Random_Assembly.Random(G2);
+	 Put_line("Hi We would like to order " & Assembly_Name(Assembly_Type));
 	 select
-	    delay 10.0;
+	    delay 3.0;
 	    Put_Line("That's to long for me, sorry i am out, i will go elsewhere");
 	 then abort		 
-	    B.Deliver(Assembly_Type, Assembly_Number);
-	    Put_Line(Consumer_Name(Consumer_Nb) & " says: thank you very much for delicious  " &
-	    Assembly_Name(Assembly_Type) & " We're glad we ordered " &
-	    Integer'Image(Assembly_Number) & " because We are hungry");
+	    loop
+               B.Deliver(Assembly_Type, Assembly_Number);
+	       if Assembly_Number /= 0 then
+	          Put_Line(Consumer_Name(Consumer_Nb) & " says: thank you very much for delicious  " &
+	          Assembly_Name(Assembly_Type) & " We're glad we ordered " &
+	          Integer'Image(Assembly_Number) & " because We are hungry");
+	       end if;
+            end loop;
          end select;
       end loop;
    end Consumer;
@@ -197,7 +202,6 @@ procedure Simulation is
 	          Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
 	       else
 	          Put_Line("One moment Sir, you need to wait a bit longer");
-	          delay 1.0;
 	       end if;
 	    end Deliver;
             accept Take(Product: in Product_Type; Number: in Integer) do
