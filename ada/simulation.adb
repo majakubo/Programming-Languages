@@ -13,9 +13,9 @@ procedure Simulation is
    subtype Assembly_Type is Integer range 1 .. Number_Of_Assemblies;
    subtype Consumer_Type is Integer range 1 .. Number_Of_Consumers;
    Product_Name: constant array (Product_Type) of String(1 .. 8)
-     := ("Product1", "Product2", "Product3", "Product4", "Product5");
+     := ("Fries   ", "DietCola", "BigMac  ", "Salad   ", "McWrap  ");
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 9)
-     := ("Assembly1", "Assembly2", "Assembly3");
+     := ("HappyMeal", "BigMacPro", "VeganYou ");
    package Random_Consumption is new
      Ada.Numerics.Discrete_Random(Consumption_Time_Range);
    package Random_Assembly is new
@@ -53,11 +53,11 @@ procedure Simulation is
 	 Product_Type_Number := Product;
 	 Production := Production_Time;
       end Start;
-      Put_Line("Started producer of " & Product_Name(Product_Type_Number));
+      Put_Line("Okey Let's do " & Product_Name(Product_Type_Number));
       loop
 	 delay Duration(Random_Production.Random(G)); 
-	 Put_Line("Produced product " & Product_Name(Product_Type_Number)
-		    & " number "  & Integer'Image(Product_Number));
+	 Put_Line("Hey I made " & Product_Name(Product_Type_Number)
+		    & " i have "  & Integer'Image(Product_Number) & " of them");
 	 B.Take(Product_Type_Number, Product_Number);
 	 Product_Number := Product_Number + 1;
       end loop;
@@ -72,7 +72,7 @@ procedure Simulation is
       Assembly_Type: Integer;
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
 	of String(1 .. 9)
-	:= ("Consumer1", "Consumer2");
+	:= ("Students ", "Family   ");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
 		     Consumption_Time: in Integer) do
@@ -81,7 +81,7 @@ procedure Simulation is
 	 Consumer_Nb := Consumer_Number;
          Consumption := Consumption_Time;
       end Start;
-      Put_Line("Started consumer " & Consumer_Name(Consumer_Nb));
+      Put_Line("Wow,  " & Consumer_Name(Consumer_Nb) & " came to McDonald hungry as always!");
       loop
 	 
 	 delay Duration(Random_Consumption.Random(G)); 
@@ -91,9 +91,9 @@ procedure Simulation is
 	    Put_Line("That's to long for me, sorry i am out, i will go elsewhere");
 	 then abort		 
 	    B.Deliver(Assembly_Type, Assembly_Number);
-	    Put_Line(Consumer_Name(Consumer_Nb) & ": taken assembly " &
-	    Assembly_Name(Assembly_Type) & " number " &
-	    Integer'Image(Assembly_Number));
+	    Put_Line(Consumer_Name(Consumer_Nb) & " says: thank you very much for delicious  " &
+	    Assembly_Name(Assembly_Type) & " We're glad we ordered " &
+	    Integer'Image(Assembly_Number) & " because We are hungry");
          end select;
       end loop;
    end Consumer;
@@ -182,25 +182,23 @@ procedure Simulation is
       end Storage_Contents;
 
    begin
-      Put_Line("Buffer started");
+      Put_Line("McDonald's is open! Welcome everybody");
       Setup_Variables;
       loop
 	 accept Take(Product: in Product_Type; Number: in Integer) do
 	   if Can_Accept(Product) then
-	      Put_Line("Accepted product " & Product_Name(Product) & " number " &
-		Integer'Image(Number));
+	      Put_Line("Thank you for " & Integer'Image(Number) & "  " & Product_Name(Product));
 	      Storage(Product) := Storage(Product) + 1;
 	      In_Storage := In_Storage + 1;
   	   else
-	      Put_Line("Rejected product " & Product_Name(Product) & " number " &
-		    Integer'Image(Number));
+	      Put_Line("Sorry I can't take " & Integer'Image(Number) & " " & Product_Name(Product));
 	   end if;
 	 end Take;
 	 Storage_Contents;
 	 
 	 accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do       
 	    if Can_Deliver(Assembly) then
-	       Put_Line("Delivered assembly " & Assembly_Name(Assembly) & " number " &
+	       Put_Line("Here's your's " & Assembly_Name(Assembly) & " in amount of " &
 			  Integer'Image(Assembly_Number(Assembly)));
 	       for W in Product_Type loop
 		  Storage(W) := Storage(W) - Assembly_Content(Assembly, W);
@@ -209,7 +207,7 @@ procedure Simulation is
 	       Number := Assembly_Number(Assembly);
 	       Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
 	    else
-	       Put_Line("One moment Sir, i am waiting for producers to produce");
+	       Put_Line("One moment Sir, you need to wait a bit longer");
 	       delay 1.0;
 	    end if;
 	 end Deliver;
