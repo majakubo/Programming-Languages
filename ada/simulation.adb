@@ -93,17 +93,19 @@ procedure Simulation is
       loop
 	 delay Duration(Random_Consumption.Random(G)); 
 	 Assembly_Type := Random_Assembly.Random(G2);
-	 Put_line("Hi We would like to order " & Assembly_Name(Assembly_Type));
+	 Put_line("Hi We as a " & Consumer_Name(Consumer_Nb) & " would like to order " & Assembly_Name(Assembly_Type));
 	 select
-	    delay 2.0;
-	    Put_Line("That's to long for me, sorry i am out, i will go elsewhere");
+	    delay 10.0;
+	    Put_Line("That's to long for us(" & Consumer_Name(Consumer_Nb) & ") sorry we are out, we will go elsewhere");
 	 then abort		 
 	    loop
+	       delay 1.0;	    
                B.Deliver(Assembly_Type, Assembly_Number);
 	       if Assembly_Number /= 0 then
 	          Put_Line(Consumer_Name(Consumer_Nb) & " says: thank you very much for delicious  " &
 	          Assembly_Name(Assembly_Type) & " We're glad we ordered " &
 	          Integer'Image(Assembly_Number) & " because We are hungry");
+	          exit;
 	       end if;
             end loop;
          end select;
@@ -226,7 +228,7 @@ procedure Simulation is
 	    end Take;
          end select;
 
-	 Storage_Contents;
+	 --Storage_Contents;
       end loop;
    end Buffer;
    
