@@ -1,7 +1,3 @@
--- A skeleton of a program for an assignment in programming languages
--- The students should rename the tasks of producers, consumers, and the buffer
--- Then, they should change them so that they would fit their assignments
--- They should also complete the code with constructions that lack there
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; 
 with Ada.Numerics.Discrete_Random;
@@ -26,25 +22,18 @@ procedure Simulation is
      Ada.Numerics.Discrete_Random(Assembly_Type);
    type My_Str is new String(1 ..256);
 
-   -- Producer produces determined product
-   task type Producer is
-      -- Give the Producer an identity, i.e. the product type
-      entry Start(Product: in Product_Type; Production_Time: in Integer);
+      task type Producer is
+            entry Start(Product: in Product_Type; Production_Time: in Integer);
    end Producer;
 
-   -- Consumer gets an arbitrary assembly of several products from the buffer
-   task type Consumer is
-      -- Give the Consumer an identity
-      entry Start(Consumer_Number: in Consumer_Type;
+      task type Consumer is
+            entry Start(Consumer_Number: in Consumer_Type;
 		    Consumption_Time: in Integer);
    end Consumer;
 
-   -- In the Buffer, products are assemblied into an assembly
-   task type Buffer is
-      -- Accept a product to the storage provided there is a room for it
-      entry Take(Product: in Product_Type; Number: in Integer);
-      -- Deliver an assembly provided there are enough products for it
-      entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
+      task type Buffer is
+            entry Take(Product: in Product_Type; Number: in Integer);
+            entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
    end Buffer;
 
    P: array ( 1 .. Number_Of_Products ) of Producer;
@@ -54,31 +43,29 @@ procedure Simulation is
    task body Producer is
       package Random_Production is new
 	Ada.Numerics.Discrete_Random(Production_Time_Range);
-      G: Random_Production.Generator;	--  generator liczb losowych
+      G: Random_Production.Generator;	      
       Product_Type_Number: Integer;
       Product_Number: Integer;
       Production: Integer;
    begin
       accept Start(Product: in Product_Type; Production_Time: in Integer) do
-	 Random_Production.Reset(G);	--  start random number generator
-	 Product_Number := 1;
+	 Random_Production.Reset(G);		 Product_Number := 1;
 	 Product_Type_Number := Product;
 	 Production := Production_Time;
       end Start;
       Put_Line("Started producer of " & Product_Name(Product_Type_Number));
       loop
-	 delay Duration(Random_Production.Random(G)); --  symuluj produkcję
+	 delay Duration(Random_Production.Random(G)); 
 	 Put_Line("Produced product " & Product_Name(Product_Type_Number)
 		    & " number "  & Integer'Image(Product_Number));
-	 -- Accept for storage
 	 B.Take(Product_Type_Number, Product_Number);
 	 Product_Number := Product_Number + 1;
       end loop;
    end Producer;
 
    task body Consumer is
-      G: Random_Consumption.Generator;	--  random number generator (time)
-      G2: Random_Assembly.Generator;	--  also (assemblies)
+      G: Random_Consumption.Generator;	
+      G2: Random_Assembly.Generator;	
       Consumer_Nb: Consumer_Type;
       Assembly_Number: Integer;
       Consumption: Integer;
@@ -89,20 +76,25 @@ procedure Simulation is
    begin
       accept Start(Consumer_Number: in Consumer_Type;
 		     Consumption_Time: in Integer) do
-	 Random_Consumption.Reset(G);	--  ustaw generator
-	 Random_Assembly.Reset(G2);	--  też
+	 Random_Consumption.Reset(G);	
+	 Random_Assembly.Reset(G2);	
 	 Consumer_Nb := Consumer_Number;
-	 Consumption := Consumption_Time;
+         Consumption := Consumption_Time;
       end Start;
       Put_Line("Started consumer " & Consumer_Name(Consumer_Nb));
       loop
-	 delay Duration(Random_Consumption.Random(G)); --  simulate consumption
+	 
+	 delay Duration(Random_Consumption.Random(G)); 
 	 Assembly_Type := Random_Assembly.Random(G2);
-	 -- take an assembly for consumption
-	 B.Deliver(Assembly_Type, Assembly_Number);
-	 Put_Line(Consumer_Name(Consumer_Nb) & ": taken assembly " &
-		    Assembly_Name(Assembly_Type) & " number " &
-		    Integer'Image(Assembly_Number));
+	 select
+	    delay 10.0;
+	    Put_Line("That's to long for me, sorry i am out, i will go elsewhere");
+	 then abort		 
+	    B.Deliver(Assembly_Type, Assembly_Number);
+	    Put_Line(Consumer_Name(Consumer_Nb) & ": taken assembly " &
+	    Assembly_Name(Assembly_Type) & " number " &
+	    Integer'Image(Assembly_Number));
+         end select;
       end loop;
    end Consumer;
 
@@ -133,17 +125,15 @@ procedure Simulation is
       end Setup_Variables;
 
       function Can_Accept(Product: Product_Type) return Boolean is
-	 Free: Integer;		--  free room in the storage
-	 -- how many products are for production of arbitrary assembly
+	 Free: Integer;		
 	 Lacking: array(Product_Type) of Integer;
-	 -- how much room is needed in storage to produce arbitrary assembly
 	 Lacking_room: Integer;
-	 MP: Boolean;			--  can accept
+	 MP: Boolean;			
       begin
 	 if In_Storage >= Storage_Capacity then
 	    return False;
 	 end if;
-	 -- There is free room in the storage
+	 
 	 Free := Storage_Capacity - In_Storage;
 	 MP := True;
 	 for W in Product_Type loop
@@ -207,7 +197,8 @@ procedure Simulation is
 	   end if;
 	 end Take;
 	 Storage_Contents;
-	 accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do
+	 
+	 accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do       
 	    if Can_Deliver(Assembly) then
 	       Put_Line("Delivered assembly " & Assembly_Name(Assembly) & " number " &
 			  Integer'Image(Assembly_Number(Assembly)));
@@ -218,8 +209,8 @@ procedure Simulation is
 	       Number := Assembly_Number(Assembly);
 	       Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
 	    else
-	       Put_Line("Lacking products for assembly " & Assembly_Name(Assembly));
-	       Number := 0;
+	       Put_Line("One moment Sir, i am waiting for producers to produce");
+	       delay 1.0;
 	    end if;
 	 end Deliver;
 	 Storage_Contents;
