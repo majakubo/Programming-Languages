@@ -104,9 +104,9 @@ procedure Simulation is
       Storage: Storage_type
 	:= (0, 0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Product_Type) of Integer
-	:= ((2, 1, 2, 1, 2),
-	    (2, 2, 0, 1, 0),
-	    (1, 1, 2, 0, 1));
+	:= ((1, 1, 0, 1, 1),
+	    (2, 2, 2, 0, 0),
+	    (2, 1, 0, 2, 0));
       Max_Assembly_Content: array(Product_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
 	:= (1, 1, 1);
@@ -185,32 +185,31 @@ procedure Simulation is
       Put_Line("McDonald's is open! Welcome everybody");
       Setup_Variables;
       loop
-	 accept Take(Product: in Product_Type; Number: in Integer) do
-	   if Can_Accept(Product) then
-	      Put_Line("Thank you for " & Integer'Image(Number) & "  " & Product_Name(Product));
-	      Storage(Product) := Storage(Product) + 1;
-	      In_Storage := In_Storage + 1;
-  	   else
-	      Put_Line("Sorry I can't take " & Integer'Image(Number) & " " & Product_Name(Product));
-	   end if;
-	 end Take;
-	 Storage_Contents;
+	    accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do
+	        if Can_Deliver(Assembly) then
+	          Put_Line("Here's your's " & Assembly_Name(Assembly) & " in amount of " &
+		  	     Integer'Image(Assembly_Number(Assembly)));
+	          for W in Product_Type loop
+		     Storage(W) := Storage(W) - Assembly_Content(Assembly, W);
+		     In_Storage := In_Storage - Assembly_Content(Assembly, W);
+	          end loop;
+	          Number := Assembly_Number(Assembly);
+	          Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
+	       else
+	          Put_Line("One moment Sir, you need to wait a bit longer");
+	          delay 1.0;
+	       end if;
+	    end Deliver;
+            accept Take(Product: in Product_Type; Number: in Integer) do
+	      if Can_Accept(Product) then
+	         Put_Line("Thank you for " & Integer'Image(Number) & "  " & Product_Name(Product));
+	         Storage(Product) := Storage(Product) + 1;
+	         In_Storage := In_Storage + 1;
+  	      else
+	         Put_Line("Sorry I can't take " & Integer'Image(Number) & " " & Product_Name(Product));
+	      end if;
+	    end Take;
 	 
-	 accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do       
-	    if Can_Deliver(Assembly) then
-	       Put_Line("Here's your's " & Assembly_Name(Assembly) & " in amount of " &
-			  Integer'Image(Assembly_Number(Assembly)));
-	       for W in Product_Type loop
-		  Storage(W) := Storage(W) - Assembly_Content(Assembly, W);
-		  In_Storage := In_Storage - Assembly_Content(Assembly, W);
-	       end loop;
-	       Number := Assembly_Number(Assembly);
-	       Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
-	    else
-	       Put_Line("One moment Sir, you need to wait a bit longer");
-	       delay 1.0;
-	    end if;
-	 end Deliver;
 	 Storage_Contents;
       end loop;
    end Buffer;
