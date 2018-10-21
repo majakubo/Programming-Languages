@@ -66,6 +66,7 @@ procedure Simulation is
 	    if IsTaken then
                exit;
 	    end if;
+	    delay 3.0;
 	 end loop;
 
       end loop;
