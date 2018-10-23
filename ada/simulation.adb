@@ -10,8 +10,7 @@ procedure Simulation is
   
 
    P: array ( 1 .. Number_Of_Products ) of Producer;
-   K: array ( 1 .. Number_Of_Consumers ) of Consumer;
-   
+   K: array ( 1 .. Number_Of_Consumers ) of Consumer; 
 
    
 begin

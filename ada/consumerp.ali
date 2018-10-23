@@ -11,21 +11,21 @@ RV NO_IMPLICIT_CONDITIONALS
 RV NO_RELATIVE_DELAY
 RV NO_SELECT_STATEMENTS
 RV NO_STANDARD_STORAGE_POOLS
-RV NO_TASK_HIERARCHY
 RV NO_TASKING
 RV NO_DEFAULT_INITIALIZATION
 RV NO_DYNAMIC_SIZED_OBJECTS
 RV NO_ELABORATION_CODE
 RV SPARK_05
 RV MAX_TASK_ENTRIES=1
-RV MAX_TASKS=1+
+RV MAX_TASKS=1
 RV MAX_ASYNCHRONOUS_SELECT_NESTING=1+
 
-U consumerp%b		consumerp.adb		f3bab30d OO PK
+U consumerp%b		consumerp.adb		4f440964 OO PK
 W ada%s			ada.ads			ada.ali
 W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
 W ada.tags%s		a-tags.adb		a-tags.ali
 W ada.text_io%s		a-textio.adb		a-textio.ali
+W bufferp%s		bufferp.adb		bufferp.ali  AD
 W system%s		system.ads		system.ali
 W system.concat_3%s	s-conca3.adb		s-conca3.ali
 W system.concat_4%s	s-conca4.adb		s-conca4.ali
@@ -37,14 +37,16 @@ W system.tasking.async_delays%s  s-taasde.adb	s-taasde.ali
 W system.tasking.rendezvous%s  s-tasren.adb	s-tasren.ali
 W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
 
-U consumerp%s		consumerp.ads		a3d2583b EE NE OO PK
+U consumerp%s		consumerp.ads		2198b536 EE OO PK
 W ada%s			ada.ads			ada.ali
 W ada.numerics%s	a-numeri.ads		a-numeri.ali
 W ada.numerics.discrete_random%s
 W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
 W bufferp%s		bufferp.adb		bufferp.ali
 W system%s		system.ads		system.ali
 W system.parameters%s	s-parame.adb		s-parame.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
 W system.task_info%s	s-tasinf.adb		s-tasinf.ali
 W system.tasking%s	s-taskin.adb		s-taskin.ali
 W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
@@ -65,8 +67,8 @@ D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
 D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
 D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
 D bufferp.ads		20181023063520 c5c11742 bufferp%s
-D consumerp.ads		20181023063614 17f61296 consumerp%s
-D consumerp.adb		20181023063738 dc21544f consumerp%b
+D consumerp.ads		20181023064448 95bcff9b consumerp%s
+D consumerp.adb		20181023064108 e295032b consumerp%b
 D interfac.ads		20160502101001 5ab55268 interfaces%s
 D i-c.ads		20110801143639 5421119b interfaces.c%s
 D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
@@ -118,18 +120,19 @@ X 13 a-textio.ads
 X 16 bufferp.ads
 5K9*BufferP 28e12 17|1w6 1r19
 8i4*Number_Of_Consumers{integer} 18|11r43
-14I12*Consumer_Type{integer} 17|6r39 18|7r20 16r40
+14I12*Consumer_Type{integer} 17|7r39 18|7r20 16r40
 17a4*Assembly_Name(string) 18|27r90 37r19
 19K12*Random_Consumption[9|44] 18|5r10 18r10 25r25
 21K12*Random_Assembly[9|44] 18|6r11 19r10 26r27
-24T15*Buffer 27e14 18|14r9
+24T15*Buffer 27e14 17|5r15
 26Y13 Deliver 18|34s18
 X 17 consumerp.ads
-4K9*ConsumerP 9l5 9e14 18|3b14 46l5 46t14
-5T13*Consumer 8l8 8e16 18|4b11 44l8 44t16
-6Y13 Start 6>19 7>21 18|16b14 22l11 22t16
-6i19 Consumer_Number{16|14I12} 18|20r25
-7i21 Consumption_Time{integer} 18|21r25
+4K9*ConsumerP 10l5 10e14 18|3b14 46l5 46t14
+5t12*B{16|24T15} 18|34r16
+6T13*Consumer 9l8 9e16 18|4b11 44l8 44t16
+7Y13 Start 7>19 8>21 18|16b14 22l11 22t16
+7i19 Consumer_Number{16|14I12} 18|20r25
+8i21 Consumption_Time{integer} 18|21r25
 X 18 consumerp.adb
 5r7 G{9|50R9[16|19]} 18r35 25r51
 6r7 G2{9|50R9[16|21]} 19r32 26r50
@@ -138,7 +141,6 @@ X 18 consumerp.adb
 9i7 Consumption{integer} 21m10
 10i7 Assembly_Type{integer} 26m10 27r104 34r26 37r33
 11a7 Consumer_Name(string) 23r27 27r35 30r49 36r28
-14t6 B{16|24T15} 34r16
 16i20 Consumer_Number{16|14I12}
 17i22 Consumption_Time{integer}
 X 40 s-stausa.ads
