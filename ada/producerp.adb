@@ -10,6 +10,7 @@ task body Producer is
       Product_Number: Integer;
       Production: Integer;
       IsTaken: Boolean;
+         B: Buffer;
    begin
       accept Start(Product: in Product_Type; Production_Time: in Integer) do
 	 Random_Production.Reset(G);		 

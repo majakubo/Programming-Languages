@@ -11,6 +11,7 @@ task body Consumer is
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
 	of String(1 .. 9)
 	:= ("Students ", "Family   ");
+         B: Buffer;
    begin
       accept Start(Consumer_Number: in Consumer_Type;
 		     Consumption_Time: in Integer) do

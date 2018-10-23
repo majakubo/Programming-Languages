@@ -1,3 +1,6 @@
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; 
+with Ada.Numerics.Discrete_Random;
 
 package BufferP is
    Number_Of_Products: constant Integer := 5;
@@ -13,6 +16,10 @@ package BufferP is
      := ("Fries   ", "DietCola", "BigMac  ", "Salad   ", "McWrap  ");
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 9)
      := ("HappyMeal", "BigMacPro", "VeganYou ");
+   package Random_Consumption is new
+     Ada.Numerics.Discrete_Random(Consumption_Time_Range);
+   package Random_Assembly is new
+     Ada.Numerics.Discrete_Random(Assembly_Type);
    type My_Str is new String(1 ..256);
     task type Buffer is
       entry Take(Product: in Product_Type; Number: in Integer; IsTaken: out Boolean);
