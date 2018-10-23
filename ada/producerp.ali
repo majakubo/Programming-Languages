@@ -7,6 +7,7 @@ RV NO_EXCEPTION_HANDLERS
 RV NO_EXCEPTIONS
 RV NO_FIXED_POINT
 RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
 RV NO_RELATIVE_DELAY
 RV NO_STANDARD_STORAGE_POOLS
 RV NO_TASKING
@@ -17,9 +18,10 @@ RV NO_ELABORATION_CODE
 RV SPARK_05
 RV MAX_TASK_ENTRIES=1
 
-U producerp%b		producerp.adb		9a6741a6 OO PK
+U producerp%b		producerp.adb		310297df OO PK
 W ada%s			ada.ads			ada.ali
 W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
 W ada.numerics%s	a-numeri.ads		a-numeri.ali
 W ada.numerics.discrete_random%s
 W ada.tags%s		a-tags.adb		a-tags.ali
@@ -27,9 +29,11 @@ W ada.text_io%s		a-textio.adb		a-textio.ali
 Z system%s		system.ads		system.ali
 W system.concat_2%s	s-conca2.adb		s-conca2.ali
 W system.concat_5%s	s-conca5.adb		s-conca5.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
 W system.img_int%s	s-imgint.adb		s-imgint.ali
 Z system.random_numbers%s  s-rannum.adb		s-rannum.ali
 W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
 W system.tasking%s	s-taskin.adb		s-taskin.ali
 W system.tasking.rendezvous%s  s-tasren.adb	s-tasren.ali
 W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
@@ -60,13 +64,13 @@ D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
 D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
 D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
 D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
-D bufferp.ads		20181023063520 c5c11742 bufferp%s
-D consumerp.ads		20181023064448 95bcff9b consumerp%s
+D bufferp.ads		20181023064731 c5c11742 bufferp%s
+D consumerp.ads		20181023065004 95bcff9b consumerp%s
 D interfac.ads		20160502101001 5ab55268 interfaces%s
 D i-c.ads		20110801143639 5421119b interfaces.c%s
 D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
-D producerp.ads		20181023064538 d7a7f412 producerp%s
-D producerp.adb		20181023064050 04481d8f producerp%b
+D producerp.ads		20181023064731 d7a7f412 producerp%s
+D producerp.adb		20181023071843 af2dcbf6 producerp%b
 D system.ads		20170510173650 4635ec04 system%s
 D s-atacco.ads		20120515093410 4c36d12f system.address_to_access_conversions%s
 D s-conca2.ads		20140225151544 02a0d7d0 system.concat_2%s
@@ -110,40 +114,42 @@ X 8 a-numeri.ads
 X 9 a-nudira.ads
 44k22*Discrete_Random 75e33 23|2w19 7r22
 50R9 Generator<39|63R9> 23|8r28[6]
-52V13 Random{integer} 23|23s43[6]
-55U14 Reset<39|100p14> 23|16s28[6]
+52V13 Random{integer} 23|25s46[6]
+55U14 Reset<39|100p14> 23|17s28[6]
 X 10 a-nudira.adb
 53V16 Random[39|83]{integer} 40|392b13[23|6]
 X 14 a-textio.ads
 49K13*Text_IO 471e16 23|1w10 1r27
-263U14*Put_Line 23|21s7 24s10
+263U14*Put_Line 23|22s7 26s13 42s16
 X 17 bufferp.ads
 5K9*BufferP 28e12 22|1w6 1r19
 10I12*Production_Time_Range{integer} 23|7r38
-12I12*Product_Type{integer} 22|5r31 23|15r32
-15a6*Product_Name(string) 23|21r35 24r35
-25Y13 Take 23|28s15
+12I12*Product_Type{integer} 22|5r31 23|16r32
+15a6*Product_Name(string) 23|22r35 26r38
+25Y13 Take 23|30s18
 X 18 consumerp.ads
 4K9*ConsumerP 10e14 22|2w6 2r21
-5t12*B{17|24T15} 23|28r13
+5t3*B{17|24T15} 23|30r16
 X 19 interfac.ads
 74M9*Unsigned_32
 77M9*Unsigned_64
 X 22 producerp.ads
-3K9*ProducerP 8l5 8e14 23|4b14 37l5 37t14
-4T11*Producer 6l8 6e16 23|5b11 36l8 36t16
-5Y13 Start 5>19 5>45 23|15b14 20l11 20t16
-5i19 Product{17|12I12} 23|18r33
-5i45 Production_Time{integer} 23|19r24
+3K9*ProducerP 8l5 8e14 23|4b14 46l5 46t14
+4T11*Producer 6l8 6e16 23|5b11 45l8 45t16
+5Y13 Start 5>19 5>45 23|16b14 21l11 21t16
+5i19 Product{17|12I12} 23|19r33
+5i45 Production_Time{integer} 23|20r24
 X 23 producerp.adb
-6K15 Random_Production[9|44] 8r10 16r10 23r25
-8r7 G{9|50R9[6]} 16r34 23r50
-9i7 Product_Type_Number{integer} 18m10 21r48 24r48 28r20
-10i7 Product_Number{integer} 17m10 25r51 28r41
-11i7 Production{integer} 19m10
-12b7 IsTaken{boolean} 28m57 29r16
-15i20 Product{17|12I12}
-15i46 Production_Time{integer}
+6K15 Random_Production[9|44] 8r10 17r10 25r28
+8r7 G{9|50R9[6]} 17r34 25r53
+9i7 Product_Type_Number{integer} 19m10 22r48 26r51 30r23
+10i7 Product_Number{integer} 18m10 27r51 30r44
+11i7 Production{integer} 20m10
+12b7 IsTaken{boolean} 30m60 35r19
+13i7 Attemps{integer} 28m13 31m16 31r27 32r19
+14X7 except 33r25 41r18
+16i20 Product{17|12I12}
+16i46 Production_Time{integer}
 X 39 s-rannum.ads
 75V13*Random{19|74M9} 40|221i21
 76V13*Random{19|77M9} 40|221i21

@@ -56,8 +56,8 @@ D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
 D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
 D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
 D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
-D bufferp.ads		20181023063520 c5c11742 bufferp%s
-D bufferp.adb		20181022213824 65c5d207 bufferp%b
+D bufferp.ads		20181023064731 c5c11742 bufferp%s
+D bufferp.adb		20181023065346 65c5d207 bufferp%b
 D interfac.ads		20160502101001 5ab55268 interfaces%s
 D i-c.ads		20110801143639 5421119b interfaces.c%s
 D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s

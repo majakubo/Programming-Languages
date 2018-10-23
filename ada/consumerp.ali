@@ -66,9 +66,9 @@ D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
 D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
 D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
 D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
-D bufferp.ads		20181023063520 c5c11742 bufferp%s
-D consumerp.ads		20181023064448 95bcff9b consumerp%s
-D consumerp.adb		20181023064108 e295032b consumerp%b
+D bufferp.ads		20181023064731 c5c11742 bufferp%s
+D consumerp.ads		20181023065004 95bcff9b consumerp%s
+D consumerp.adb		20181023065237 e295032b consumerp%b
 D interfac.ads		20160502101001 5ab55268 interfaces%s
 D i-c.ads		20110801143639 5421119b interfaces.c%s
 D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
@@ -124,11 +124,11 @@ X 16 bufferp.ads
 17a4*Assembly_Name(string) 18|27r90 37r19
 19K12*Random_Consumption[9|44] 18|5r10 18r10 25r25
 21K12*Random_Assembly[9|44] 18|6r11 19r10 26r27
-24T15*Buffer 27e14 17|5r15
+24T15*Buffer 27e14 17|5r6
 26Y13 Deliver 18|34s18
 X 17 consumerp.ads
 4K9*ConsumerP 10l5 10e14 18|3b14 46l5 46t14
-5t12*B{16|24T15} 18|34r16
+5t3*B{16|24T15} 18|34r16
 6T13*Consumer 9l8 9e16 18|4b11 44l8 44t16
 7Y13 Start 7>19 8>21 18|16b14 22l11 22t16
 7i19 Consumer_Number{16|14I12} 18|20r25

@@ -36,7 +36,7 @@ task body Consumer is
 	          Put_Line(Consumer_Name(Consumer_Nb) & " says: thank you very much for delicious  " &
 	          Assembly_Name(Assembly_Type) & " We're glad we ordered " &
 	          Integer'Image(Assembly_Number) & " because We are hungry");
-	          exit;
+	          exit;  
 	       end if;
             end loop;
          end select;
